@@ -1,0 +1,7 @@
+.config/
+.vs/
+Properties/
+bin/
+obj/
+Content/bin/
+Content/obj/
