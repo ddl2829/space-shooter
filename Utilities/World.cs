@@ -44,11 +44,18 @@ namespace MonoSpaceShooter.Utilities
 
         public void EntityLostComponent(Entity e, Type type)
         {
-            componentMap[type].Remove(e);
+            if (componentMap.ContainsKey(type))
+            {
+                componentMap[type].Remove(e);
+            }
         }
 
         public void EntityGainedComponent(Entity e, Type type)
         {
+            if (!componentMap.ContainsKey(type))
+            {
+                componentMap.Add(type, new List<Entity>());
+            }
             componentMap[type].Add(e);
         }
 
@@ -76,6 +83,7 @@ namespace MonoSpaceShooter.Utilities
 
         public void AddEntity(Entity e)
         {
+            e.world = this;
             entities.Add(e);
             foreach(Type componentType in e.components.Keys)
             {

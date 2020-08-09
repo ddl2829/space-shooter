@@ -7,7 +7,7 @@ namespace MonoSpaceShooter.Components
     {
         static int colorSelect = 0;
         public string text;
-        public int elapsedTime;
+        public int elapsedTime = 0;
         public int maxLife = 200;
         public Color color;
         public bool centerText = false;

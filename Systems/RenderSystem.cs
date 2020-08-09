@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoSpaceShooter.Components;
 using MonoSpaceShooter.Entities;
 using MonoSpaceShooter.Utilities;
+using SpaceShooter;
 
 namespace MonoSpaceShooter.Systems
 {
@@ -16,32 +17,6 @@ namespace MonoSpaceShooter.Systems
 
         public override void Update(GameTime gametime)
         {
-            List<Entity> explosions = world.GetEntities(new[] { typeof(ExplosionComponent), typeof(PositionComponent), typeof(RenderComponent) });
-            foreach (Entity explosion in explosions)
-            {
-                PositionComponent pc = (PositionComponent)explosion.components[typeof(PositionComponent)];
-                RenderComponent rc = (RenderComponent)explosion.components[typeof(RenderComponent)];
-                ExplosionComponent ec = (ExplosionComponent)explosion.components[typeof(ExplosionComponent)];
-                ec.elapsedTime += gametime.ElapsedGameTime.Milliseconds;
-                if (ec.elapsedTime > ec.maxLife)
-                {
-                    world.RemoveEntity(explosion);
-                    continue;
-                }
-            }
-
-            List<Entity> notifications = world.GetEntities(new[] { typeof(NotificationComponent), typeof(PositionComponent) });
-            foreach(Entity notification in notifications)
-            {
-                PositionComponent pc = (PositionComponent)notification.components[typeof(PositionComponent)];
-                NotificationComponent ec = (NotificationComponent)notification.components[typeof(NotificationComponent)];
-                ec.elapsedTime += gametime.ElapsedGameTime.Milliseconds;
-                if(ec.elapsedTime > ec.maxLife)
-                {
-                    world.RemoveEntity(notification);
-                    continue;
-                }
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont)
@@ -51,30 +26,52 @@ namespace MonoSpaceShooter.Systems
             {
                 PositionComponent pc = (PositionComponent)drawable.components[typeof(PositionComponent)];
                 RenderComponent rc = (RenderComponent)drawable.components[typeof(RenderComponent)];
-                spriteBatch.Draw(rc.texture, new Rectangle((int)pc.position.X - (rc.texture.Width / 2), (int)pc.position.Y - (rc.texture.Height / 2), rc.texture.Width, rc.texture.Height), Color.White);
+                if (rc.visible)
+                {
+                    spriteBatch.Draw(rc.CurrentTexture, new Rectangle((int)pc.position.X - (rc.CurrentTexture.Width / 2), (int)pc.position.Y - (rc.CurrentTexture.Height / 2), rc.CurrentTexture.Width, rc.CurrentTexture.Height), Color.White);
+
+                    if (drawable.HasComponent(typeof(PlayerComponent)))
+                    {
+                        PlayerComponent player = (PlayerComponent)drawable.components[typeof(PlayerComponent)];
+                        if (drawable.HasComponent(typeof(ShieldedComponent)))
+                        {
+                            Texture2D shield = Game1.instance.playerShield;
+                            spriteBatch.Draw(shield, new Rectangle((int)(pc.position.X - rc.CurrentTexture.Width / 2) - 25, (int)(pc.position.Y - rc.CurrentTexture.Height / 2) - 30, shield.Width, shield.Height), Color.White);
+                        }
+                    }
+                }
             }
 
-            List<Entity> notifications = world.GetEntities(new[] { typeof(NotificationComponent), typeof(PositionComponent) });
-            foreach (Entity notification in notifications)
+            List<Entity> players = world.GetEntities(new[] { typeof(PlayerComponent) });
+            if (players.Count > 0)
             {
-                PositionComponent pc = (PositionComponent)notification.components[typeof(PositionComponent)];
-                NotificationComponent rc = (NotificationComponent)notification.components[typeof(NotificationComponent)];
-                if(rc.centerText)
+                Entity player = players[0];
+                PlayerComponent pc = (PlayerComponent)player.components[typeof(PlayerComponent)];
+                TakesDamageComponent ptdc = (TakesDamageComponent)player.components[typeof(TakesDamageComponent)];
+                for (int i = 0; i < pc.lives; i++)
                 {
-                    spriteBatch.DrawString(
-                        spriteFont,
-                        rc.text,
-                        new Vector2(
-                            world.screenRect.Width / 2 - spriteFont.MeasureString(rc.text).X / 2,
-                            world.screenRect.Height / 3 - spriteFont.MeasureString(rc.text).Y / 2
-                        ),
-                        rc.color
-                    );
-                } else
-                {
-                    spriteBatch.DrawString(spriteFont, rc.text, pc.position, rc.color);
+                    spriteBatch.Draw(Game1.instance.playerLivesGraphic, new Rectangle(40 * i + 10, 10, Game1.instance.playerLivesGraphic.Width, Game1.instance.playerLivesGraphic.Height), Color.White);
                 }
-                
+
+                string scoreText = "" + Math.Truncate(Game1.instance.playerScore);
+                spriteBatch.DrawString(spriteFont, scoreText, new Vector2(world.screenRect.Width - spriteFont.MeasureString(scoreText).X - 30, 5), Color.White);
+
+                spriteBatch.Draw(Game1.instance.blank, new Rectangle(8, 43, 150, 12), Color.Black);
+                spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 44, 148, 10), Color.White);
+                spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 44, (int)(((double)ptdc.health / ptdc.maxHealth) * 148), 10), Color.Red);
+
+                if (player.HasComponent(typeof(HasShieldComponent)))
+                {
+                    HasShieldComponent hasShieldComponent = (HasShieldComponent)player.components[typeof(HasShieldComponent)];
+                    spriteBatch.Draw(Game1.instance.blank, new Rectangle(8, 60, 150, 12), Color.Black);
+                    spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 61, 148, 10), Color.White);
+                    spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 61, (int)((hasShieldComponent.shieldPower / hasShieldComponent.maxShieldPower) * 148), 10), Color.Blue);
+
+                    if (hasShieldComponent.shieldCooldown)
+                    {
+                        spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 61, (int)((hasShieldComponent.shieldPower / hasShieldComponent.maxShieldPower) * 148), 10), Color.Purple);
+                    }
+                }
             }
         }
     }
