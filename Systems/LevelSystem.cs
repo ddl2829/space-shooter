@@ -65,19 +65,19 @@ namespace MonoSpaceShooter.Systems
 
         private void BuildLevel()
         {
-//#if DEBUG
-//            Entity boss = new Entity();
-//            boss.AddComponent(new EnemyComponent(10000, 0));
-//            boss.AddComponent(new RenderComponent(Game1.instance.bossTexture));
-//            boss.AddComponent(new PositionComponent(new Vector2(Game1.instance.screenBounds.Width / 2, -100)));
-//            boss.AddComponent(new SpeedComponent(new Vector2(0, 1)));
-//            boss.AddComponent(new TakesDamageComponent(10 * levelNumber, DamageSystem.LASER));
-//            boss.AddComponent(new DealsDamageComponent(20, DamageSystem.ENEMY));
-//            boss.AddComponent(new BossEnemyComponent());
-//            world.AddEntity(boss);
-//            levelLength = -100;
-//#else
-            levelLength = -1000 + (-1000 * levelNumber);
+            //#if DEBUG
+            //            Entity boss = new Entity();
+            //            boss.AddComponent(new EnemyComponent(10000, 0));
+            //            boss.AddComponent(new RenderComponent(Game1.instance.bossTexture));
+            //            boss.AddComponent(new PositionComponent(new Vector2(Game1.instance.screenBounds.Width / 2, -100)));
+            //            boss.AddComponent(new SpeedComponent(new Vector2(0, 1)));
+            //            boss.AddComponent(new TakesDamageComponent(10 * levelNumber, DamageSystem.LASER));
+            //            boss.AddComponent(new DealsDamageComponent(20, DamageSystem.ENEMY));
+            //            boss.AddComponent(new BossEnemyComponent());
+            //            world.AddEntity(boss);
+            //            levelLength = -100;
+            //#else
+            levelLength = -1000;// +  (-1000 * levelNumber);
 
             Random rand = new Random();
 
