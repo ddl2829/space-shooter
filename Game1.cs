@@ -33,7 +33,8 @@ namespace SpaceShooter
         public Texture2D blank;
 
         public Texture2D enemyShip;
-        
+        public Texture2D bossTexture;
+
         public Texture2D laserRed;
         public Texture2D laserGreen;
 
@@ -83,6 +84,7 @@ namespace SpaceShooter
             world.AddSystem(new InputSystem(world));
             world.AddSystem(new ExplosionSystem(world));
             world.AddSystem(new NotificationSystem(world));
+            world.AddSystem(new LevelSystem(world));
             base.Initialize();
         }
 
@@ -100,6 +102,7 @@ namespace SpaceShooter
             blank = Content.Load<Texture2D>("blank");
 
             enemyShip = Content.Load<Texture2D>("enemyShip");
+            bossTexture = Content.Load<Texture2D>("bossEnemy");
 
             backgroundMusic = Content.Load<Song>("loop-transit");
 
@@ -136,45 +139,6 @@ namespace SpaceShooter
 
         protected override void UnloadContent()
         {
-        }
-
-        public void PrepareLevel()
-        {
-            //How to seed a level?
-
-            //Generally want them to get harder as you go on
-            //should have enemies in formations
-            //should end with a boss (not implemented)
-
-            //Initialize random meteors
-            Random rand = new Random();
-            int randomAmt = rand.Next(100, 300);
-            for (int i = 0; i < randomAmt; i++)
-            {
-                bool bigMeteor = (rand.Next() % 2 == 0) ? true : false;
-                Entity newMeteor = new Entity();
-                newMeteor.AddComponent(new MeteorComponent(bigMeteor));
-                newMeteor.AddComponent(new RenderComponent(bigMeteor ? meteorBig : meteorSmall));
-                newMeteor.AddComponent(new TakesDamageComponent(bigMeteor ? 10 : 5, DamageSystem.LASER));
-                newMeteor.AddComponent(new DealsDamageComponent(bigMeteor ? 10 : 5, DamageSystem.METEOR));
-                int[] speeds = new[] { 1, 1, 1, 2, 2, 2, 3, 3, 4, 5 };
-                newMeteor.AddComponent(new SpeedComponent(new Vector2(0, speeds[rand.Next(0, speeds.Length)])));
-                newMeteor.AddComponent(new PositionComponent(new Vector2(rand.Next(0, screenBounds.Width), rand.Next(-10000, -100))));
-                world.AddEntity(newMeteor);
-            }
-
-            int randomEnemies = rand.Next(30, 100);
-            for (int i = 0; i < randomEnemies; i++)
-            {
-                Entity enemy = new Entity();
-                enemy.AddComponent(new EnemyComponent(rand.Next(2, 4) * 1000, -rand.NextDouble() * 10000));
-                enemy.AddComponent(new RenderComponent(enemyShip));
-                enemy.AddComponent(new PositionComponent(new Vector2(rand.Next(0, screenBounds.Width), rand.Next(-10000, 0))));
-                enemy.AddComponent(new SpeedComponent(new Vector2(0, 1)));
-                enemy.AddComponent(new TakesDamageComponent(10, DamageSystem.LASER));
-                enemy.AddComponent(new DealsDamageComponent(20, DamageSystem.ENEMY));
-                world.AddEntity(enemy);
-            }
         }
 
         protected override void Update(GameTime gameTime)

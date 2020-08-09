@@ -32,7 +32,6 @@ namespace MonoSpaceShooter.Systems
 
                     if (drawable.HasComponent(typeof(PlayerComponent)))
                     {
-                        PlayerComponent player = (PlayerComponent)drawable.components[typeof(PlayerComponent)];
                         if (drawable.HasComponent(typeof(ShieldedComponent)))
                         {
                             Texture2D shield = Game1.instance.playerShield;
@@ -69,7 +68,7 @@ namespace MonoSpaceShooter.Systems
 
                     if (hasShieldComponent.shieldCooldown)
                     {
-                        spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 61, (int)((hasShieldComponent.shieldPower / hasShieldComponent.maxShieldPower) * 148), 10), Color.Purple);
+                        spriteBatch.Draw(Game1.instance.blank, new Rectangle(9, 61, (int)(Math.Min((hasShieldComponent.shieldPower / hasShieldComponent.maxShieldPower), 1) * 148), 10), Color.Purple);
                     }
                 }
             }

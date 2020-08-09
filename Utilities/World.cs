@@ -17,6 +17,14 @@ namespace MonoSpaceShooter.Utilities
         Dictionary<Type, List<Entity>> componentMap;
         //QuadTree<QuadStorable> quadtreeEntities;
 
+        public int NumberOfEntities
+        {
+            get
+            {
+                return entities.Count;
+            }
+        }
+
         public World(Rectangle rect)
         {
             screenRect = rect;

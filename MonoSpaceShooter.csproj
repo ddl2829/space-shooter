@@ -40,4 +40,10 @@
     <Folder Include="Utilities\" />
     <Folder Include="Screens\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Content\bin\DesktopGL\bossEnemy.xnb">
+      <Link>Content\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

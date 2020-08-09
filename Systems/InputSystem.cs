@@ -132,17 +132,17 @@ namespace MonoSpaceShooter.Systems
             }
 
             bool upgradedLasers = false;
-            if (Game1.instance.kills > 5 && pc.laserLevel == 0)
+            if (Game1.instance.kills > 10 && pc.laserLevel == 0)
             {
                 pc.laserLevel = 1;
                 upgradedLasers = true;
             }
-            if (Game1.instance.kills > 10 && pc.laserLevel == 1)
+            if (Game1.instance.kills > 20 && pc.laserLevel == 1)
             {
                 pc.laserLevel = 2;
                 upgradedLasers = true;
             }
-            if (Game1.instance.kills > 15 && pc.laserLevel == 2)
+            if (Game1.instance.kills > 40 && pc.laserLevel == 2)
             {
                 pc.laserLevel = 3;
                 upgradedLasers = true;
@@ -154,8 +154,6 @@ namespace MonoSpaceShooter.Systems
                 e.AddComponent(new NotificationComponent("Lasers Improved", 2000, true));
                 world.AddEntity(e);
             }
-
-            
 
             if (keyboardState.IsKeyDown(Keys.Space) && !player.HasComponent(typeof(ShieldedComponent)))
             {

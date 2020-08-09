@@ -24,7 +24,29 @@ namespace MonoSpaceShooter.Systems
                 PositionComponent pc = (PositionComponent)enemy.components[typeof(PositionComponent)];
                 SpeedComponent sc = (SpeedComponent)enemy.components[typeof(SpeedComponent)];
 
-                sc.motion.Y = 1;
+
+                if (pc.position.Y <= 0)
+                {
+                    //dont do anything if the enemy isnt on the screen
+                    sc.motion.X = 0;
+                    sc.motion.Y = 1;
+                    continue;
+                }
+
+                if (enemy.HasComponent(typeof(BossEnemyComponent)))
+                {
+                    if(pc.position.Y <= 100)
+                    {
+                        sc.motion.Y = 1;
+                    } else
+                    {
+                        sc.motion.Y = 0;
+                    }
+                }
+                else
+                {
+                    sc.motion.Y = 1;
+                }
                 if(players.Count == 0)
                 {
                     sc.motion.X = 0;
