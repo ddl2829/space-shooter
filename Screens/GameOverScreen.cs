@@ -31,7 +31,6 @@ namespace MonoSpaceShooter.Screens
             if (KeyPressed(Keys.Enter))
             {
                 Game1.instance.PopScreen(); //this screen
-                Game1.instance.PrepareLevel();
                 Game1.instance.playerScore = 0;
                 Game1.instance.kills = 0;
                 Game1.instance.PushScreen(new GameScreen());

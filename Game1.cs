@@ -125,8 +125,6 @@ namespace SpaceShooter
             //Explosions
             explosionTexture = Content.Load<Texture2D>("laserRedShot");
             explosionTextureGreen = Content.Load<Texture2D>("laserGreenShot");
-            
-            PrepareLevel();
 
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = .0f;
