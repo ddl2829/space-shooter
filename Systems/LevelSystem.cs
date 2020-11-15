@@ -77,7 +77,7 @@ namespace MonoSpaceShooter.Systems
             //            world.AddEntity(boss);
             //            levelLength = -100;
             //#else
-            levelLength = -1000;// +  (-1000 * levelNumber);
+            levelLength = -1000 +  (-1000 * levelNumber);
 
             Random rand = new Random();
 
@@ -92,7 +92,7 @@ namespace MonoSpaceShooter.Systems
                     Entity newMeteor = new Entity();
                     newMeteor.AddComponent(new MeteorComponent(bigMeteor));
                     newMeteor.AddComponent(new RenderComponent(bigMeteor ? Game1.instance.meteorBig : Game1.instance.meteorSmall));
-                    newMeteor.AddComponent(new TakesDamageComponent(bigMeteor ? 10 : 5, DamageSystem.LASER));
+                    newMeteor.AddComponent(new TakesDamageComponent(bigMeteor ? 10 * levelNumber : 2 * levelNumber, DamageSystem.LASER));
                     newMeteor.AddComponent(new DealsDamageComponent(bigMeteor ? 10 : 5, DamageSystem.METEOR));
                     int[] speeds = new[] { 1, 1, 1, 2, 2, 2, 3, 3, 4, 5 };
                     newMeteor.AddComponent(new SpeedComponent(new Vector2(0, speeds[rand.Next(0, speeds.Length)])));
@@ -108,7 +108,7 @@ namespace MonoSpaceShooter.Systems
                     enemy.AddComponent(new RenderComponent(Game1.instance.enemyShip));
                     enemy.AddComponent(new PositionComponent(new Vector2(rand.Next(50, Game1.instance.screenBounds.Width - 50), rand.Next(l - 1000, Math.Min(-100, l)))));
                     enemy.AddComponent(new SpeedComponent(new Vector2(0, 1)));
-                    enemy.AddComponent(new TakesDamageComponent(10, DamageSystem.LASER));
+                    enemy.AddComponent(new TakesDamageComponent(5 + (5 * levelNumber) + (3 * j), DamageSystem.LASER));
                     enemy.AddComponent(new DealsDamageComponent(20, DamageSystem.ENEMY));
                     world.AddEntity(enemy);
                 }
